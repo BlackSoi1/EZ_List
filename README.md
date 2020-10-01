@@ -16,3 +16,17 @@ The to-do list application is named **EZ**. This application has following *feat
  too "powerful". For example, some of them have a news section and some of them can edit the background
  picture of the list. I want to make a simple to-do list application that only do *"to-do list"* work.
  And this is the reason why I named it "EZ".
+ 
+
+## User Stories
+- As a user, I want to be able to add a item to my to-do list.
+
+- As a user, I want to be able to cross items off on my to-do list.
+
+- As a user, I want to be able to view all the tasks on the list.
+
+- As a user, I want to be able to view only the completed tasks on the list.
+
+- As a user, I want to be able to set priorities of tasks on my list.
+
+- As a user, I want to be reminded when the task approaches deadline.
