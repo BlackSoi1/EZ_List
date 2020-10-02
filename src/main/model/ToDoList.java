@@ -34,9 +34,5 @@ public class ToDoList {
         return false;
     }
 
-    //MODIFIES: this
-    //EFFECTS: set deadline of the task on the to-do list
-    public void setDeadline(){
 
-    }
 }

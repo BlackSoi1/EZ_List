@@ -10,14 +10,16 @@ public class Tasks {
     private String name;
     private boolean status;
     private String info;
+    private String deadline;
 
     //REQUIRES:name have non-zero length
-    //EFFECTS:task name is set to name; task info is set to blank space
-    //task status is set to NOTCOMPLETED
-    public Tasks(String name, String info) {
+    //EFFECTS:task name is set to name; task info is set to blank space;
+    //task status is set to NOTCOMPLETED; deadline is set to "0"
+    public Tasks(String name, String info, String deadline) {
         this.name = name;
         this.info = info;
         status = NOTCOMPLETED;
+        this.deadline = deadline;
     }
 
     public String getName() {
