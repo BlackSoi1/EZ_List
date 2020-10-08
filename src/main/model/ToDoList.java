@@ -5,32 +5,44 @@ Represent a to-do list
  */
 
 
-public class ToDoList {
-    public ToDoList() {
+import java.util.ArrayList;
+import java.util.List;
 
+public class ToDoList {
+    private List<Tasks> toDoList;
+    private String listName;
+
+    public ToDoList(String listName) {
+        toDoList = new ArrayList<Tasks>();
+        this.listName = listName;
     }
 
     //MODIFIES: this,task
     //EFFECTS: add task to the to-do list
     public void addTask(Tasks task) {
-
+        toDoList.add(task);
     }
 
     //MODIFIES: this
     //EFFECTS: delete the task from the to-do list
     public void deleteTask(Tasks task) {
-
+        toDoList.remove(task);
     }
 
-    //MODIFIES: this
-    //EFFECTS: set priorities of the task on the to-do list, finish the high priorities task first
-    public void setPriorities() {
-
+    //EFFECTS: return the size of the to do list
+    public int size() {
+        return toDoList.size();
     }
 
-    //EFFECTS:check the task one the to-do list is completed or not
-    public boolean isCompleted(Tasks task) {
-        return false;
+    //EFFECTS: return the size of the to do list
+    public Tasks getTasks(int index) {
+        return toDoList.get(index);
     }
+
+    //EFFECTS: return the name of the to do list
+    public String getListName() {
+        return listName;
+    }
+
 
 }
