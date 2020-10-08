@@ -83,7 +83,7 @@ public class ToDoApp {
     //EFFECTS: show all the tasks on the list to user
     public void showAllTasks() {
         for (int i = 0; i < toDoList.size(); i++) {
-            Tasks item = toDoList.getTasks(i);
+            Tasks item = toDoList.getTask(i);
             System.out.println(item);
         }
     }
@@ -91,7 +91,7 @@ public class ToDoApp {
     //EFFECTS: show completed tasks on the list to user
     public void showCompletedTasks() {
         for (int i = 0; i < toDoList.size(); i++) {
-            Tasks item = toDoList.getTasks(i);
+            Tasks item = toDoList.getTask(i);
             if (item.getStatus()) {
                 System.out.println(item);
             }
@@ -130,7 +130,7 @@ public class ToDoApp {
     //EFFECTS: mark the task as completed
     public void setCompleted(String name) {
         for (int i = 0; i < toDoList.size(); i++) {
-            Tasks item = toDoList.getTasks(i);
+            Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
                 item.setStatus(true);
                 System.out.println("The task " + item.getName() + " has been marked as completed");
@@ -145,7 +145,7 @@ public class ToDoApp {
     //EFFECTS: delete the task from the to-do list
     public void deleteTask(String name) {
         for (int i = 0; i < toDoList.size(); i++) {
-            Tasks item = toDoList.getTasks(i);
+            Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
                 toDoList.deleteTask(item);
                 System.out.println("The task " + item.getName() + " has been deleted");
@@ -160,7 +160,7 @@ public class ToDoApp {
     //EFFECTS: set priority of the task on the list, high priority task will appear on the top of the list
     public void setTaskPriority(String name, int num) {
         for (int i = 0; i < toDoList.size(); i++) {
-            Tasks item = toDoList.getTasks(i);
+            Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
                 item.setPriority(num);
                 sortList();
@@ -177,8 +177,8 @@ public class ToDoApp {
     public void sortList() {
         for (int i = 0; i < toDoList.size(); i++) {
             for (int j = 1; j < toDoList.size() - i; j++) {
-                Tasks taskA = toDoList.getTasks(j - 1);
-                Tasks taskB = toDoList.getTasks(j);
+                Tasks taskA = toDoList.getTask(j - 1);
+                Tasks taskB = toDoList.getTask(j);
                 int priorityA = taskA.getPriority();
                 int priorityB = taskB.getPriority();
                 if (priorityA < priorityB) {

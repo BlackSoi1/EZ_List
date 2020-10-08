@@ -23,6 +23,7 @@ public class ToDoList {
         toDoList.add(task);
     }
 
+    //REQUIRES: assume the to-do list is not empty
     //MODIFIES: this
     //EFFECTS: delete the task from the to-do list
     public void deleteTask(Tasks task) {
@@ -35,7 +36,7 @@ public class ToDoList {
     }
 
     //EFFECTS: return the size of the to do list
-    public Tasks getTasks(int index) {
+    public Tasks getTask(int index) {
         return toDoList.get(index);
     }
 
