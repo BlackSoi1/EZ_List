@@ -6,37 +6,37 @@ import org.junit.jupiter.api.Test;
 public class ToDoListTest {
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
     }
 
     @Test
-    void testConstructor(){
+    void testConstructor() {
 
     }
 
     @Test
-    void testAddTask(){
+    void testAddTask() {
 
     }
 
     @Test
-    void testDeleteTask(){
+    void testDeleteTask() {
 
     }
 
     @Test
-    void testSetPriorities(){
+    void testSetPriorities() {
 
     }
 
     @Test
-    void testIsCompleted(){
+    void testIsCompleted() {
 
     }
 
     @Test
-    void testSetDeadLine(){
+    void testSetDeadLine() {
 
     }
 }

@@ -5,27 +5,26 @@ Represent a to-do list
  */
 
 
-
 public class ToDoList {
-    public ToDoList(){
+    public ToDoList() {
 
     }
 
     //MODIFIES: this,task
     //EFFECTS: add task to the to-do list
-    public void addTask(Tasks task){
+    public void addTask(Tasks task) {
 
     }
 
     //MODIFIES: this
     //EFFECTS: delete the task from the to-do list
-    public void deleteTask(Tasks task){
+    public void deleteTask(Tasks task) {
 
     }
 
     //MODIFIES: this
     //EFFECTS: set priorities of the task on the to-do list, finish the high priorities task first
-    public void setPriorities(){
+    public void setPriorities() {
 
     }
 
@@ -33,6 +32,5 @@ public class ToDoList {
     public boolean isCompleted(Tasks task) {
         return false;
     }
-
 
 }

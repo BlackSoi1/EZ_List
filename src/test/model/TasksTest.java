@@ -6,32 +6,32 @@ import org.junit.jupiter.api.Test;
 public class TasksTest {
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
     }
 
     @Test
-    void testConstructor(){
+    void testConstructor() {
 
     }
 
     @Test
-    void testGetName(){
+    void testGetName() {
 
     }
 
     @Test
-    void testGetInfo(){
+    void testGetInfo() {
 
     }
 
     @Test
-    void testGetStatus(){
+    void testGetStatus() {
 
     }
 
     @Test
-    void testsetStatusIsCompleted(){
+    void testSetStatusIsCompleted() {
 
     }
 }
