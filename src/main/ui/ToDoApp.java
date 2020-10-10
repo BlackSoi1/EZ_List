@@ -39,6 +39,7 @@ public class ToDoApp {
             } else if (command.equals("Q")) {
                 System.out.println("Thanks for using EZ to-do list, goodbye!");
                 flag = false;
+                break;
             } else {
                 System.out.println("Invalid Input");
             }

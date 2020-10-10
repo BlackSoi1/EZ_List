@@ -52,10 +52,4 @@ public class ToDoListTest {
         assertEquals(other.getStatus(),false);
         assertEquals(other.getPriority(),1);
     }
-
-    @Test
-    void testGetListName() {
-        String name = toDoList.getListName();
-        assertEquals(name,"list1");
-    }
 }
