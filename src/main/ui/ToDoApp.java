@@ -10,7 +10,8 @@ public class ToDoApp {
     private Scanner input;
     private ToDoList toDoList;
     private Tasks task;
-    String command;
+    private String command = null;
+    private String command2;
 
     //EFFECTS: run the To-Do application
     public ToDoApp() {
@@ -22,9 +23,9 @@ public class ToDoApp {
     //EFFECTS: process the user input
     public void start() {
         boolean flag = true;
-        display();
         while (flag) {
-            command = input.next().toUpperCase();
+            display();
+            command = input.nextLine().toUpperCase();
             if (command.equals("L")) {
                 createList();
             } else if (command.equals("T")) {
@@ -38,12 +39,11 @@ public class ToDoApp {
                 showCompletedTasks();
             } else if (command.equals("Q")) {
                 System.out.println("Thanks for using EZ to-do list, goodbye!");
-                flag = false;
                 break;
             } else {
                 System.out.println("Invalid Input");
             }
-            display();
+
         }
     }
 
@@ -65,7 +65,7 @@ public class ToDoApp {
     //EFFECTS: receive the to-do list name from user to create a new to-do list
     public void createList() {
         System.out.println("Please enter the to-do list name");
-        String listName = input.next();
+        String listName = input.nextLine();
         toDoList = new ToDoList(listName);
         System.out.println("A new to-do list named " + listName + " has been created");
     }
@@ -74,9 +74,9 @@ public class ToDoApp {
     //EFFECTS: receive the task name, task info and task deadline from user to create a task and return the task
     public void createTask() {
         System.out.println("Please enter the task name");
-        String name = input.next();
+        String name = input.nextLine();
         System.out.println("Please enter the task information");
-        String info = input.next();
+        String info = input.nextLine();
         task = new Tasks(name, info);
         System.out.println("A new task has been created and been added to the list" + toDoList.getListName());
     }
@@ -105,20 +105,20 @@ public class ToDoApp {
         System.out.println("Enter M to mark the task as completed");
         System.out.println("Enter P to set the priorities of the task");
         System.out.println("Enter D to delete the task from the list");
-        command = input.next().toUpperCase();
-        if (command.equals("M")) {
+        command2 = input.nextLine().toUpperCase();
+        if (command2.equals("M")) {
             System.out.println("Please enter the task name that you completed");
-            String name = input.next();
+            String name = input.nextLine();
             setCompleted(name);
-        } else if (command.equals("P")) {
+        } else if (command2.equals("P")) {
             System.out.println("Please enter the task name that you want set priority");
-            String name = input.next();
+            String name = input.nextLine();
             System.out.println("Please enter the priority level you want set (from 0-5)");
-            int num = input.nextInt();
+            int num = Integer.parseInt(input.nextLine());
             setTaskPriority(name, num);
-        } else if (command.equals("D")) {
+        } else if (command2.equals("D")) {
             System.out.println("Please enter the task name that you want delete");
-            String name = input.next();
+            String name = input.nextLine();
             deleteTask(name);
         } else {
             System.out.println("Invalid Input");
@@ -165,7 +165,7 @@ public class ToDoApp {
             if (item.getName().equals(name)) {
                 item.setPriority(num);
                 sortList();
-                System.out.println("The task " + item.getName() + " has been set priority as " + num);
+                System.out.println("The task " + name + " has been set priority as " + num);
                 System.out.println("Edit operation end");
                 return;
             }
