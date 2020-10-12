@@ -60,11 +60,6 @@ public class Tasks {
         int priority = 0;
     }
 
-    //EFFECTS:check the task is completed or not
-    public boolean isCompleted(Tasks task) {
-        return task.getStatus();
-    }
-
     //EFFECTS: return the task details in clear format
     @Override
     public String toString() {
