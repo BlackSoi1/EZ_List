@@ -34,6 +34,8 @@ public class ToDoListTest {
         assertEquals(toDoList.size(), 1);
         toDoList.deleteTask(task);
         assertEquals(toDoList.size(), 0);
+        boolean flag = toDoList.deleteTask(task);
+        assertEquals(flag,false);
     }
 
     @Test

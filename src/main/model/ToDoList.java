@@ -23,11 +23,16 @@ public class ToDoList {
         toDoList.add(task);
     }
 
-    //REQUIRES: assume the to-do list is not empty
     //MODIFIES: this
-    //EFFECTS: delete the task from the to-do list
-    public void deleteTask(Tasks task) {
-        toDoList.remove(task);
+    //EFFECTS: If the to-do list size is 0 return false, else delete the task from the to-do list and return true.
+    public boolean deleteTask(Tasks task) {
+        if (toDoList.size() == 0) {
+            return false;
+        } else {
+            toDoList.remove(task);
+            return true;
+        }
+
     }
 
     //EFFECTS: return the size of the to do list
@@ -44,5 +49,6 @@ public class ToDoList {
     public String getListName() {
         return listName;
     }
+
 
 }
