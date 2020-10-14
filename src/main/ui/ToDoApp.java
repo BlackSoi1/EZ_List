@@ -23,12 +23,13 @@ public class ToDoApp {
     //EFFECTS: process the user input
     public void start() {
         boolean flag = true;
+        System.out.println("Welcome to the EZ to-do list Application!");
+        System.out.println("Please create a new to-do list for your tasks");
+        createList();
         while (flag) {
             display();
             command = input.nextLine().toUpperCase();
-            if (command.equals("L")) {
-                createList();
-            } else if (command.equals("T")) {
+            if (command.equals("T")) {
                 createTask();
                 toDoList.addTask(task);
             } else if (command.equals("E")) {
@@ -50,9 +51,7 @@ public class ToDoApp {
     //EFFECTS: show the application interface to user
     public void display() {
         System.out.println("===========================================================");
-        System.out.println("Welcome to the EZ to-do list Application!");
         System.out.println("Please enter the following commands for further operation:");
-        System.out.println("Enter L to create a new list");
         System.out.println("Enter T to create a new task");
         System.out.println("Enter S to show all tasks");
         System.out.println("Enter C to show all completed tasks");
@@ -83,6 +82,7 @@ public class ToDoApp {
 
     //EFFECTS: show all the tasks on the list to user
     public void showAllTasks() {
+        System.out.println("All task(s) on the list:");
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             System.out.println(item);
@@ -91,6 +91,7 @@ public class ToDoApp {
 
     //EFFECTS: show completed tasks on the list to user
     public void showCompletedTasks() {
+        System.out.println("The completed task(s):");
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getStatus()) {
