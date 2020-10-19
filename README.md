@@ -29,4 +29,6 @@ The to-do list application is named **EZ**. This application has following *feat
 
 - As a user, I want to be able to set priorities of tasks on my list.
 
+- As a user, I want to be able to save my to-do list to file.
 
+- As a user, I want to be able to be able to load my to-do list from file 

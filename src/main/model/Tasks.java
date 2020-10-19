@@ -5,13 +5,33 @@ Represents a task
  */
 
 import javafx.concurrent.Task;
+import org.json.JSONObject;
+import persistence.Writable;
 
-public class Tasks {
+public class Tasks implements Writable {
     private static final boolean NOTCOMPLETED = false;
     private String name;
     private boolean status;
     private String info;
     private int priority;
+
+    //REQUIRES:name have non-zero length
+    public Tasks(String name, String info, boolean status,int priority) {
+        this.name = name;
+        this.status = status;
+        this.info = info;
+        this.priority = priority;
+    }
+
+    //REQUIRES:name have non-zero length
+    //EFFECTS:task name is set to name; task info is set to blank space;
+    //task status is set to NOTCOMPLETED; deadline is set to "0"
+    public Tasks(String name, String info) {
+        this.name = name;
+        this.info = info;
+        status = NOTCOMPLETED;
+        int priority = 0;
+    }
 
     public String getName() {
         return name;
@@ -50,15 +70,7 @@ public class Tasks {
     }
 
 
-    //REQUIRES:name have non-zero length
-    //EFFECTS:task name is set to name; task info is set to blank space;
-    //task status is set to NOTCOMPLETED; deadline is set to "0"
-    public Tasks(String name, String info) {
-        this.name = name;
-        this.info = info;
-        status = NOTCOMPLETED;
-        int priority = 0;
-    }
+
 
     //EFFECTS: return the task details in clear format
     @Override
@@ -83,5 +95,16 @@ public class Tasks {
         other.setName(tempName);
         other.setPriority(tempPri);
         other.setInfo(tempInfo);
+    }
+
+    // model code base on JsonSerializationDemo-Thingy
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("info", info);
+        json.put("status",status);
+        json.put("priority",priority);
+        return json;
     }
 }

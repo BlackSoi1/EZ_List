@@ -5,10 +5,14 @@ Represent a to-do list
  */
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToDoList {
+public class ToDoList implements Writable {
     private List<Tasks> toDoList;
     private String listName;
 
@@ -53,5 +57,25 @@ public class ToDoList {
         return listName;
     }
 
+    // model code base on JsonSerializationDemo-WorkRoom
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", listName);
+        json.put("tasks", tasksToJson());
+        return json;
+    }
+
+    // model code base on JsonSerializationDemo-WorkRoom
+    // EFFECTS: returns tasks in this to-do list as a JSON array
+    private JSONArray tasksToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Tasks t : toDoList) {
+            jsonArray.put(t.toJson());
+        }
+
+        return jsonArray;
+    }
 
 }
