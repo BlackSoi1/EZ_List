@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import persistence.Writable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ToDoList implements Writable {
@@ -34,6 +35,11 @@ public class ToDoList implements Writable {
 
     }
 
+    // model code base on JsonSerializationDemo-WorkRoom
+    // EFFECTS: returns an unmodifiable list of tasks in this To-Do list
+    public List<Tasks> getTasks() {
+        return Collections.unmodifiableList(toDoList);
+    }
 
     //REQUIRES:  the to-do list size is not 0
     //MODIFIES: this
