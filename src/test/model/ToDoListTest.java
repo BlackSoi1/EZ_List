@@ -1,5 +1,7 @@
 package model;
 
+import exception.ListSizeZeroException;
+import exception.OutOfRangeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +17,11 @@ public class ToDoListTest {
     void setUp() {
         task = new Tasks("Task2", "Test2");
         task.setStatus(false);
-        task.setPriority(1);
+        try {
+            task.setPriority(1);
+        } catch (OutOfRangeException e) {
+            e.printStackTrace();
+        }
         toDoList = new ToDoList("list1");
     }
 
@@ -27,16 +33,31 @@ public class ToDoListTest {
         assertEquals(toDoList.getTask(0).getName(), "Task2");
         assertEquals(toDoList.getTask(0).getInfo(), "Test2");
         boolean flag = toDoList.addTask(task);
-        assertEquals(flag,false);
+        assertEquals(flag, false);
     }
 
     @Test
-    void testDeleteTask() {
+    void testDeleteTaskWhenListNotEmpty() {
         toDoList.addTask(task);
         assertEquals(toDoList.getTask(0), task);
         assertEquals(toDoList.size(), 1);
-        toDoList.deleteTask(task);
+        try {
+            toDoList.deleteTask(task);
+        } catch (ListSizeZeroException e) {
+            fail();
+        }
         assertEquals(toDoList.size(), 0);
+    }
+
+    @Test
+    void testDeleteTaskWhenListIsEmpty() {
+        assertEquals(toDoList.size(), 0);
+        try {
+            toDoList.deleteTask(task);
+        } catch (ListSizeZeroException e) {
+            //
+        }
+
     }
 
     @Test

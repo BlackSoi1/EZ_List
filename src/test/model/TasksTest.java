@@ -1,5 +1,6 @@
 package model;
 
+import exception.OutOfRangeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,6 +12,23 @@ public class TasksTest {
         task = new Tasks("Task1","Test1");
     }
 
+    @Test
+    public void testSetPriorityWithInRange(){
+        try {
+            task.setPriority(3);
+        } catch (OutOfRangeException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSetPriorityWithOutRange(){
+        try {
+            task.setPriority(6);
+        } catch (OutOfRangeException e) {
+            //
+        }
+    }
 
     @Test
     public void testToString() {
@@ -20,11 +38,16 @@ public class TasksTest {
     @Test
     public void testSwap() {
         Tasks other = new Tasks("Task2","Test2");
-        task.setPriority(1);
-        other.setPriority(2);
-        task.setStatus(false);
-        other.setStatus(true);
-        task.swap(other);
+        try {
+            task.setPriority(1);
+            other.setPriority(2);
+            task.setStatus(false);
+            other.setStatus(true);
+            task.swap(other);
+        } catch (OutOfRangeException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(task.getName(),"Task2");
         assertEquals(task.getInfo(),"Test2");
         assertEquals(task.getStatus(),true);

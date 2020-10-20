@@ -4,6 +4,7 @@ package model;
 Represents a task
  */
 
+import exception.OutOfRangeException;
 import javafx.concurrent.Task;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -15,15 +16,15 @@ public class Tasks implements Writable {
     private String info;
     private int priority;
 
-    //REQUIRES:name have non-zero length
-    public Tasks(String name, String info, boolean status,int priority) {
+
+    public Tasks(String name, String info, boolean status, int priority) {
         this.name = name;
         this.status = status;
         this.info = info;
         this.priority = priority;
     }
 
-    //REQUIRES:name have non-zero length
+
     //EFFECTS:task name is set to name; task info is set to blank space;
     //task status is set to NOTCOMPLETED; deadline is set to "0"
     public Tasks(String name, String info) {
@@ -62,14 +63,15 @@ public class Tasks implements Writable {
         this.status = status;
     }
 
-    //REQUIRES: the range of num should between 0-5
+
     //MODIFIES: this
-    //EFFECTS: set the priority of the task
-    public void setPriority(int num) {
+    //EFFECTS: set the priority of the task. if the num is out of the range 0-5 throw OutOfRangeException
+    public void setPriority(int num) throws OutOfRangeException {
+        if (num < 0 || num > 5) {
+            throw new OutOfRangeException("The priority number you enter is out of range");
+        }
         priority = num;
     }
-
-
 
 
     //EFFECTS: return the task details in clear format
@@ -82,7 +84,7 @@ public class Tasks implements Writable {
 
     //MODIFIES:this, other
     //EFFECTS: swap 2 tasks' status, name, info and priority
-    public void swap(Tasks other) {
+    public void swap(Tasks other) throws OutOfRangeException {
         String tempName = name;
         String tempInfo = info;
         int tempPri = priority;
@@ -103,8 +105,8 @@ public class Tasks implements Writable {
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("info", info);
-        json.put("status",status);
-        json.put("priority",priority);
+        json.put("status", status);
+        json.put("priority", priority);
         return json;
     }
 }

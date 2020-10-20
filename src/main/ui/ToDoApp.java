@@ -1,5 +1,7 @@
 package ui;
 
+import exception.ListSizeZeroException;
+import exception.OutOfRangeException;
 import model.Tasks;
 import model.ToDoList;
 import persistence.JsonReader;
@@ -168,10 +170,14 @@ public class ToDoApp {
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
-                toDoList.deleteTask(item);
-                System.out.println("The task " + item.getName() + " has been deleted");
-                System.out.println("Edit operation end");
-                return;
+                try {
+                    toDoList.deleteTask(item);
+                    System.out.println("The task " + item.getName() + " has been deleted");
+                    System.out.println("Edit operation end");
+                    return;
+                } catch (ListSizeZeroException e) {
+                    e.printStackTrace();
+                }
             }
         }
         System.out.println("The task name you enter is not on the list");
@@ -183,10 +189,15 @@ public class ToDoApp {
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
-                item.setPriority(num);
-                sortList();
-                System.out.println("The task " + name + " has been set priority as " + num);
-                System.out.println("Edit operation end");
+                try {
+                    item.setPriority(num);
+                    sortList();
+                    System.out.println("The task " + name + " has been set priority as " + num);
+                    System.out.println("Edit operation end");
+
+                } catch (OutOfRangeException e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }
@@ -203,7 +214,11 @@ public class ToDoApp {
                 int priorityA = taskA.getPriority();
                 int priorityB = taskB.getPriority();
                 if (priorityA < priorityB) {
-                    taskA.swap(taskB);
+                    try {
+                        taskA.swap(taskB);
+                    } catch (OutOfRangeException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

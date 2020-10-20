@@ -5,6 +5,7 @@ Represent a to-do list
  */
 
 
+import exception.ListSizeZeroException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -41,10 +42,14 @@ public class ToDoList implements Writable {
         return Collections.unmodifiableList(toDoList);
     }
 
-    //REQUIRES:  the to-do list size is not 0
+
     //MODIFIES: this
-    //EFFECTS: delete the task from the to-do list.
-    public void deleteTask(Tasks task) {
+    //EFFECTS: delete the task from the to-do list if this to-do list is not empty. throw ListSizeZeroException if
+    //this list is empty
+    public void deleteTask(Tasks task) throws ListSizeZeroException {
+        if (toDoList.size() == 0) {
+            throw new ListSizeZeroException("Cannot delete task from empty to-do list");
+        }
         toDoList.remove(task);
     }
 

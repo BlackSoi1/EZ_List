@@ -1,17 +1,9 @@
 {
     "name": "EZ List",
-    "tasks": [
-        {
-            "name": "task 2",
-            "priority": 3,
-            "info": "work",
-            "status": false
-        },
-        {
-            "name": "task 1",
-            "priority": 0,
-            "info": "study",
-            "status": true
-        }
-    ]
+    "tasks": [{
+        "name": "task9",
+        "priority": 0,
+        "info": "math",
+        "status": false
+    }]
 }
