@@ -22,7 +22,15 @@ public class TasksTest {
     }
 
     @Test
-    public void testSetPriorityWithOutRange(){
+    public void testSetPriorityWithLessThanRange(){
+        try {
+            task.setPriority(-1);
+        } catch (OutOfRangeException e) {
+            //
+        }
+    }
+    @Test
+    public void testSetPriorityWithBiggerThanRange(){
         try {
             task.setPriority(6);
         } catch (OutOfRangeException e) {
