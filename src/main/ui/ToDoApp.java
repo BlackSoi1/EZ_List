@@ -1,5 +1,9 @@
 package ui;
 
+/*
+Represents a to-do list application ui
+ */
+
 import exception.ListSizeZeroException;
 import exception.OutOfRangeException;
 import model.Tasks;

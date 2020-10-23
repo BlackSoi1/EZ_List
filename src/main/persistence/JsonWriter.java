@@ -1,4 +1,7 @@
 package persistence;
+/*
+Represents a WriterReader
+ */
 
 import model.ToDoList;
 import org.json.JSONObject;

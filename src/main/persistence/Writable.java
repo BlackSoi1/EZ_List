@@ -1,4 +1,7 @@
 package persistence;
+/*
+Represents an interface pf JSONObject
+ */
 
 import org.json.JSONObject;
 

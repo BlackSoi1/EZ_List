@@ -1,4 +1,7 @@
 package persistence;
+/*
+Represents a JsonReader
+ */
 
 import model.Tasks;
 import model.ToDoList;

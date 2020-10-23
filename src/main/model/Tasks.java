@@ -31,7 +31,7 @@ public class Tasks implements Writable {
         this.name = name;
         this.info = info;
         status = NOTCOMPLETED;
-        int priority = 0;
+        this.priority = 0;
     }
 
     public String getName() {
