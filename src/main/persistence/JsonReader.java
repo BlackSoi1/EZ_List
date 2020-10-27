@@ -30,7 +30,7 @@ public class JsonReader {
     public ToDoList read() throws IOException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
-        return parseWorkRoom(jsonObject);
+        return parseToDoList(jsonObject);
     }
 
     // model code base on JsonSerializationDemo-JsonReader
@@ -47,7 +47,7 @@ public class JsonReader {
 
     // model code base on JsonSerializationDemo-JsonReader
     // EFFECTS: parses to-do list from JSON object and returns it
-    private ToDoList parseWorkRoom(JSONObject jsonObject) {
+    private ToDoList parseToDoList(JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         ToDoList list = new ToDoList(name);
         addTasks(list, jsonObject);

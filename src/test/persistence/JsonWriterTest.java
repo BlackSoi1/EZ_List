@@ -21,7 +21,7 @@ public class JsonWriterTest extends JsonTest {
             writer.open();
             fail("IOException was expected");
         } catch (IOException e) {
-            // pass
+            // Expected
         }
     }
 
@@ -46,7 +46,7 @@ public class JsonWriterTest extends JsonTest {
 
     // model code base on JsonSerializationDemo-JsonWriterTest
     @Test
-    void testWriterGeneralWorkroom() {
+    void testWriterGeneralToDoList() {
         try {
             ToDoList toDoList = new ToDoList("EZ List");
             toDoList.addTask(new Tasks("task 2","work",false,3));

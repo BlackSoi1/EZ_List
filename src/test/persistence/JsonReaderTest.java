@@ -14,7 +14,7 @@ public class JsonReaderTest extends JsonTest {
     // model code base on JsonSerializationDemo-JsonReaderTest
     @Test
     void testReaderNonExistentFile() {
-        JsonReader reader = new JsonReader("./data/noSuchFile.json");
+        JsonReader reader = new JsonReader("./data/noSuchFile.txt");
         try {
             ToDoList toDoList = reader.read();
             fail("IOException expected");
@@ -32,13 +32,13 @@ public class JsonReaderTest extends JsonTest {
             assertEquals("EZ List", toDoList.getListName());
             assertEquals(0, toDoList.size());
         } catch (IOException e) {
-            fail("Couldn't read from file");
+            fail("Exception shouldn't be thrown");
         }
     }
 
     // model code base on JsonSerializationDemo-JsonReaderTest
     @Test
-    void testReaderGeneralWorkRoom() {
+    void testReaderGeneralToDoList() {
         JsonReader reader = new JsonReader("./data/testReaderGeneralToDoList.txt");
         try {
             ToDoList toDoList = reader.read();
@@ -48,7 +48,7 @@ public class JsonReaderTest extends JsonTest {
             checkTask("task 2","work",false,3,tasks.get(0));
             checkTask("task 1","study",true,0,tasks.get(1));
         } catch (IOException e) {
-            fail("Couldn't read from file");
+            fail("Exception shouldn't be thrown");
         }
     }
 }
