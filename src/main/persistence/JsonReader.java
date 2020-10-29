@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
-
+//model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 // Represents a reader that reads to-do list from JSON data stored in file
 public class JsonReader {
     private String source;

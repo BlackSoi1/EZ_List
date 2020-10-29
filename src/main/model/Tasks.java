@@ -3,7 +3,7 @@ package model;
 /*
 Represents a task
  */
-
+//model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 import exception.OutOfRangeException;
 import javafx.concurrent.Task;
 import org.json.JSONObject;

@@ -4,7 +4,7 @@ package model;
 Represent a to-do list
  */
 
-
+//model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 import exception.ListSizeZeroException;
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -2,7 +2,7 @@ package persistence;
 /*
 Represents a WriterReader
  */
-
+//model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 import model.ToDoList;
 import org.json.JSONObject;
 
