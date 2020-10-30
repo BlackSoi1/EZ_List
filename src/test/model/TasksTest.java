@@ -77,8 +77,13 @@ public class TasksTest {
         assertTrue(task.equals(task2));
     }
     @Test
-    public void testEqualsWhenNotEqual(){
-        Tasks task2=new Tasks("Task2","Test2");
+    public void testEqualsWhenNameNotEqual(){
+        Tasks task2=new Tasks("Task2","Test1");
+        assertFalse(task.equals(task2));
+    }
+    @Test
+    public void testEqualsWhenInfoNotEqual(){
+        Tasks task2=new Tasks("Task1","Test2");
         assertFalse(task.equals(task2));
     }
 }
