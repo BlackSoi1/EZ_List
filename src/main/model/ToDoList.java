@@ -90,21 +90,5 @@ public class ToDoList implements Writable {
         return jsonArray;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ToDoList toDoList1 = (ToDoList) o;
-        return Objects.equals(toDoList, toDoList1.toDoList)
-                && Objects.equals(listName, toDoList1.listName);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(toDoList, listName);
-    }
 }
