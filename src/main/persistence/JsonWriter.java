@@ -1,8 +1,6 @@
 package persistence;
-/*
-Represents a WriterReader
- */
-//model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+
+
 import model.ToDoList;
 import org.json.JSONObject;
 
@@ -10,7 +8,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// Represents a writer that reads to-do list from JSON data stored in file
+//model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+/*
+Represents a writer that reads to-do list from JSON data stored in file
+ */
+
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;

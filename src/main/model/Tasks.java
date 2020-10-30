@@ -124,9 +124,7 @@ public class Tasks implements Writable {
             return false;
         }
         Tasks tasks = (Tasks) o;
-        return status == tasks.status
-                && priority == tasks.priority
-                && name.equals(tasks.name)
+        return status == tasks.status && priority == tasks.priority && name.equals(tasks.name)
                 && info.equals(tasks.info);
     }
 }
