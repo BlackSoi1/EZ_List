@@ -78,7 +78,7 @@ public class TasksTest {
     }
     @Test
     public void testEqualsWhenNotEqual(){
-        Tasks task2=new Tasks("Task2","Test1");
+        Tasks task2=new Tasks("Task2","Test2");
         assertFalse(task.equals(task2));
     }
 }
