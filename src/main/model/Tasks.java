@@ -109,4 +109,24 @@ public class Tasks implements Writable {
         json.put("priority", priority);
         return json;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Tasks tasks = (Tasks) o;
+        return status == tasks.status
+                && priority == tasks.priority
+                && name.equals(tasks.name)
+                && info.equals(tasks.info);
+    }
 }

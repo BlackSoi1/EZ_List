@@ -5,16 +5,10 @@
             "name": "task1",
             "priority": 0,
             "info": "study",
-            "status": false
+            "status": true
         },
         {
             "name": "task2",
-            "priority": 0,
-            "info": "work",
-            "status": false
-        },
-        {
-            "name": "task3",
             "priority": 0,
             "info": "shop",
             "status": false
