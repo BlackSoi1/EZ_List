@@ -9,6 +9,8 @@ import javafx.concurrent.Task;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.util.Objects;
+
 public class Tasks implements Writable {
     private static final boolean NOTCOMPLETED = false;
     private String name;
@@ -112,17 +114,11 @@ public class Tasks implements Writable {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(name, status, info, priority);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
         Tasks tasks = (Tasks) o;
         return status == tasks.status && priority == tasks.priority && name.equals(tasks.name)
                 && info.equals(tasks.info);

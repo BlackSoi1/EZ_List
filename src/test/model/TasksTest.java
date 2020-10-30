@@ -65,4 +65,20 @@ public class TasksTest {
         assertEquals(other.getStatus(),false);
         assertEquals(other.getPriority(),1);
     }
+
+    @Test
+    public void testHashCode(){
+        Tasks task2=new Tasks("Task1","Test1");
+        assertEquals(task.hashCode(),task2.hashCode());
+    }
+    @Test
+    public void testEqualsWhenEqual(){
+        Tasks task2=new Tasks("Task1","Test1");
+        assertTrue(task.equals(task2));
+    }
+    @Test
+    public void testEqualsWhenNotEqual(){
+        Tasks task2=new Tasks("Task2","Test1");
+        assertFalse(task.equals(task2));
+    }
 }
