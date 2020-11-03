@@ -1,6 +1,7 @@
 package model;
 
 import exception.ListSizeZeroException;
+import exception.NotInTheListException;
 import exception.OutOfRangeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class ToDoListTest {
     }
 
     @Test
-    void testDeleteTaskWhenListNotEmpty() {
+    void testDeleteTaskWhenListNotEmptyInTheList() {
         toDoList.addTask(task);
         assertEquals(toDoList.getTask(0), task);
         assertEquals(toDoList.size(), 1);
@@ -45,17 +46,51 @@ public class ToDoListTest {
             toDoList.deleteTask(task);
         } catch (ListSizeZeroException e) {
             fail();
+        } catch (NotInTheListException e) {
+            fail();
         }
         assertEquals(toDoList.size(), 0);
     }
 
     @Test
-    void testDeleteTaskWhenListIsEmpty() {
+    void testDeleteTaskWhenListNotEmptyNotInTheList() {
+        toDoList.addTask(task);
+        assertEquals(toDoList.getTask(0), task);
+        assertEquals(toDoList.size(), 1);
+        Tasks task2 = new Tasks("test2", "infotest");
+        try {
+            toDoList.deleteTask(task2);
+        } catch (ListSizeZeroException e) {
+            fail();
+        } catch (NotInTheListException e) {
+            //Expected
+        }
+        assertEquals(toDoList.size(), 1);
+    }
+    @Test
+    void testDeleteTaskWhenListEmptyNotInTheList() {
+
+        assertEquals(toDoList.size(), 0);
+        Tasks task2 = new Tasks("test2", "infotest");
+        try {
+            toDoList.deleteTask(task2);
+        } catch (ListSizeZeroException e) {
+            //Expected
+        } catch (NotInTheListException e) {
+            //Expected
+        }
+        assertEquals(toDoList.size(), 0);
+    }
+
+    @Test
+    void testDeleteTaskWhenListIsEmptyInTheList() {
         assertEquals(toDoList.size(), 0);
         try {
             toDoList.deleteTask(task);
         } catch (ListSizeZeroException e) {
             //
+        } catch (NotInTheListException e) {
+            e.printStackTrace();
         }
 
     }
@@ -84,4 +119,6 @@ public class ToDoListTest {
         toDoList.addTask(task);
         assertEquals(toDoList.getListName(), "list1");
     }
+
+
 }

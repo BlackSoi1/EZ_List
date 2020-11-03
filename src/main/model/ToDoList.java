@@ -5,7 +5,9 @@ Represent a to-do list
  */
 
 //model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+
 import exception.ListSizeZeroException;
+import exception.NotInTheListException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -47,9 +49,12 @@ public class ToDoList implements Writable {
     //MODIFIES: this
     //EFFECTS: delete the task from the to-do list if this to-do list is not empty. throw ListSizeZeroException if
     //this list is empty
-    public void deleteTask(Tasks task) throws ListSizeZeroException {
+    public void deleteTask(Tasks task) throws ListSizeZeroException,NotInTheListException {
         if (toDoList.size() == 0) {
             throw new ListSizeZeroException("Cannot delete task from empty to-do list");
+        }
+        if (!toDoList.contains(task)) {
+            throw new NotInTheListException();
         }
         toDoList.remove(task);
     }
