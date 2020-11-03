@@ -2,21 +2,15 @@
     "name": "EZ List",
     "tasks": [
         {
+            "name": "aaa",
+            "priority": 4,
+            "info": "aaa",
+            "status": true
+        },
+        {
             "name": "aa",
             "priority": 0,
             "info": "aa",
-            "status": false
-        },
-        {
-            "name": "bb",
-            "priority": 0,
-            "info": "bb",
-            "status": false
-        },
-        {
-            "name": "cc",
-            "priority": 0,
-            "info": "cc",
             "status": false
         }
     ]

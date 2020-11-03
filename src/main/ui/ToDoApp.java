@@ -12,11 +12,14 @@ import model.Tasks;
 import model.ToDoList;
 import persistence.JsonReader;
 import persistence.JsonWriter;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -24,10 +27,13 @@ import java.util.Scanner;
 public class ToDoApp extends JFrame {
 
     private static final String JSON_STORE = "./data/myFile.txt";
+    private static final String SUCCESS_SOUND = "./resources/Success.wav";
+    private static final String ERROR_SOUND = "./resources/Error.wav";
+    private static final String CLICK_SOUND = "./resources/Click.wav";
+    private static final String WRONG_IMAGE = "./resources/wrong.png";
+    private static final String RIGHT_IMAGE = "./resources/right.jpg";
     private static final int WIDTH = 500;
     private static final int HEIGHT = 600;
-    private boolean flag;
-    private Scanner input;
     private ToDoList toDoList;
     private Tasks task;
     private JsonWriter jsonWriter;
@@ -35,7 +41,8 @@ public class ToDoApp extends JFrame {
     private JFrame mainFrame;
     private JLabel label;
     private JButton button;
-
+    private JLabel pictureLabel;
+    private ImageIcon img;
 
     // model code base on JsonSerializationDemo-WorkRoomApp
     // EFFECTS: run the To-Do application
@@ -43,10 +50,10 @@ public class ToDoApp extends JFrame {
         mainFrame = new JFrame("EZ List");
         mainFrame.setSize(WIDTH, HEIGHT);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        input = new Scanner(System.in);
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         toDoList = new ToDoList("EZ List");
+        pictureLabel = new JLabel();
         mainFrame.setLocationRelativeTo(null);
         initialUI();
         mainFrame.setVisible(true);
@@ -80,27 +87,32 @@ public class ToDoApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.dispose();
+                playClick();
                 JPanel createPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
                 JFrame createFrame = createFrame("Create", createPanel);
-                JLabel nameText = new JLabel("Task name");
-                createPanel.add(nameText);
-                JTextArea name = createJTextArea(1, 30);
-                createPanel.add(name);
-                JLabel infoText = new JLabel("Task info");
-                createPanel.add(infoText);
-                JTextArea info = createJTextArea(5, 30);
-                createPanel.add(info);
-                JButton finishButton = finishButton(createPanel, name, info);
-                createPanel.add(finishButton);
+                addComponent(createPanel);
                 JButton backButton = backButton(createFrame, mainFrame);
                 createPanel.add(backButton);
                 createPanel.add(label);
-
             }
         });
         return button;
     }
 
+    // MODIFIES: panel
+    // EFFECTS: helper method for initialCreate() to let the panel ad the name,info JTextArea
+    public void addComponent(JPanel panel) {
+        JLabel nameText = new JLabel("Task name");
+        panel.add(nameText);
+        JTextArea name = createJTextArea(1, 30);
+        panel.add(name);
+        JLabel infoText = new JLabel("Task info");
+        panel.add(infoText);
+        JTextArea info = createJTextArea(5, 30);
+        panel.add(info);
+        JButton finishButton = finishButton(panel, name, info);
+        panel.add(finishButton);
+    }
 
     // MODIFIES: this
     // EFFECTS: create the "Show All Tasks" button and set the window for Show All Tasks
@@ -109,6 +121,7 @@ public class ToDoApp extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                playClick();
                 mainFrame.dispose();
                 JPanel showAllPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 30, 30));
                 JFrame showAllFrame = createFrame("Show All Tasks", showAllPanel);
@@ -131,6 +144,7 @@ public class ToDoApp extends JFrame {
                 JPanel showCompletedPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
                 JFrame showCompletedFrame = createFrame("Show Completed Tasks", showCompletedPanel);
                 JButton backButton = backButton(showCompletedFrame, mainFrame);
+                playClick();
                 showCompletedTasks(showCompletedPanel);
                 showCompletedPanel.add(backButton);
             }
@@ -145,6 +159,7 @@ public class ToDoApp extends JFrame {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                playClick();
                 mainFrame.dispose();
                 JPanel editPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
                 JFrame editFrame = createFrame("Edit", editPanel);
@@ -167,19 +182,21 @@ public class ToDoApp extends JFrame {
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(new ActionListener() {
             JLabel msg = new JLabel();
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     mainFrame.dispose();
                     JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
                     JFrame saveFrame = createFrame("Save", savePanel);
-
                     JButton backButton = backButton(saveFrame, mainFrame);
                     savePanel.add(msg);
                     savePanel.add(backButton);
                     saveToDoList();
+                    playSuccess();
                     msg.setText("Saved " + toDoList.getListName() + " to " + JSON_STORE);
                 } catch (FileNotFoundException fileNotFoundException) {
+                    playError();
                     msg.setText("Unable to save " + toDoList.getListName() + " to " + JSON_STORE);
                 }
 
@@ -187,6 +204,7 @@ public class ToDoApp extends JFrame {
         });
         return saveButton;
     }
+
 
     //MODIFIES: this
     //EFFECTS: create the "Load" button and set the window for Save
@@ -205,8 +223,10 @@ public class ToDoApp extends JFrame {
                     loadPanel.add(msg);
                     loadPanel.add(backButton);
                     loadToDoList();
+                    playSuccess();
                     msg.setText("Load " + toDoList.getListName() + " from " + JSON_STORE);
                 } catch (IOException ioException) {
+                    playError();
                     msg.setText("Unable to load " + toDoList.getListName() + " from " + JSON_STORE);
                 }
 
@@ -229,7 +249,7 @@ public class ToDoApp extends JFrame {
                 completePanel.add(nameText);
                 JTextArea name = new JTextArea(1, 30);
                 completePanel.add(name);
-                JButton markButton = markButton(name);
+                JButton markButton = markButton(name, completePanel);
                 completePanel.add(markButton);
                 JButton backButton = backButton(completeFrame, frame);
                 completePanel.add(backButton);
@@ -241,17 +261,20 @@ public class ToDoApp extends JFrame {
 
     //MODIFIES: this
     //EFFECTS: create a "Mark this task as completed" button and set the status of the task as completed
-    public JButton markButton(JTextArea name) {
+    public JButton markButton(JTextArea name, JPanel panel) {
         JButton btn = new JButton("Mark this task as completed");
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     String nameText = name.getText().trim();
-                    System.out.println(nameText);
                     setCompleted(nameText);
+                    playSuccess();
+                    addRightIcon(panel);
                     label.setText(nameText + " has been marked as completed");
                 } catch (NotInTheListException notInTheListException) {
+                    playError();
+                    addWrongIcon(panel);
                     label.setText("The task name you enter is not on the list!");
                 }
             }
@@ -277,7 +300,7 @@ public class ToDoApp extends JFrame {
                 priorityPanel.add(priorityText);
                 JTextArea priority = new JTextArea(1, 30);
                 priorityPanel.add(priority);
-                JButton finishButton = finishButton(name, priority);
+                JButton finishButton = finishButton(name, priority, priorityPanel);
                 priorityPanel.add(finishButton);
                 JButton backButton = backButton(priorityFrame, frame);
                 priorityPanel.add(backButton);
@@ -294,6 +317,7 @@ public class ToDoApp extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                playClick();
                 frame.dispose();
                 JPanel deletePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 100, 30));
                 JFrame deleteFrame = createFrame("Delete Task", deletePanel);
@@ -301,7 +325,7 @@ public class ToDoApp extends JFrame {
                 deletePanel.add(nameText);
                 JTextArea name = new JTextArea(1, 30);
                 deletePanel.add(name);
-                JButton finishButton = finishButton(name);
+                JButton finishButton = finishButton(name, deletePanel);
                 deletePanel.add(finishButton);
                 JButton backButton = backButton(deleteFrame, frame);
                 deletePanel.add(backButton);
@@ -313,19 +337,24 @@ public class ToDoApp extends JFrame {
 
     //MODIFIES: this
     //EFFECTS: create a "Finish" button for "Delete Task" window
-    public JButton finishButton(JTextArea name) {
+    public JButton finishButton(JTextArea name, JPanel panel) {
         JButton btn = new JButton("Finish");
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     String nameText = name.getText().trim();
-                    System.out.println(nameText);
                     deleteTask(nameText);
+                    playSuccess();
+                    addRightIcon(panel);
                     label.setText(nameText + " has been deleted from the list");
                 } catch (ListSizeZeroException listSizeZeroException) {
+                    playError();
+                    addWrongIcon(panel);
                     label.setText("The list is empty!");
                 } catch (NotInTheListException notInTheListException) {
+                    playError();
+                    addWrongIcon(panel);
                     label.setText("The task name you enter is not on the list!");
                 }
 
@@ -336,7 +365,7 @@ public class ToDoApp extends JFrame {
 
     //MODIFIES: this
     //EFFECTS: create a "Finish" button for "Set Task priority" window
-    public JButton finishButton(JTextArea name, JTextArea priority) {
+    public JButton finishButton(JTextArea name, JTextArea priority, JPanel panel) {
         JButton btn = new JButton("Finish");
         btn.addActionListener(new ActionListener() {
             @Override
@@ -344,12 +373,17 @@ public class ToDoApp extends JFrame {
                 try {
                     String nameText = name.getText().trim();
                     int priorityNum = Integer.parseInt(priority.getText().trim());
-                    System.out.println(nameText);
                     setTaskPriority(nameText, priorityNum);
+                    playSuccess();
+                    addRightIcon(panel);
                     label.setText("Set the task " + nameText + "'s priority as " + priority.getText().trim());
                 } catch (NotInTheListException notInTheListException) {
+                    playError();
+                    addWrongIcon(panel);
                     label.setText("The task name you enter is not on the list!");
                 } catch (OutOfRangeException outOfRangeException) {
+                    playError();
+                    addWrongIcon(panel);
                     label.setText("The task priority you enter is our of range!");
                 }
 
@@ -366,10 +400,10 @@ public class ToDoApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nameText = name.getText().trim();
-                System.out.println(nameText);
                 String infoText = info.getText().trim();
-                System.out.println(infoText);
                 createTask(nameText, infoText);
+                playSuccess();
+                addRightIcon(panel);
                 label.setText("A new task has been created and been added to the EZ list");
             }
         });
@@ -406,6 +440,7 @@ public class ToDoApp extends JFrame {
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                playClick();
                 frame.dispose();
                 backFrame.setVisible(true);
             }
@@ -413,36 +448,83 @@ public class ToDoApp extends JFrame {
         return btn;
     }
 
+    //EFFECTS: play click sound
+    public void playClick() {
+        try {
+            FileInputStream audioFile = new FileInputStream(CLICK_SOUND);
+            AudioStream as = new AudioStream(audioFile);
+            AudioPlayer.player.start(as);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    //EFFECTS: play success sound
+    public void playSuccess() {
+        try {
+            FileInputStream audioFile = new FileInputStream(SUCCESS_SOUND);
+            AudioStream as = new AudioStream(audioFile);
+            AudioPlayer.player.start(as);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    //EFFECTS: play error sound
+    public void playError() {
+        try {
+            FileInputStream audioFile = new FileInputStream(ERROR_SOUND);
+            AudioStream as = new AudioStream(audioFile);
+            AudioPlayer.player.start(as);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    //MODIFIES: panel
+    //EFFECTS: add wrong icon to the given panel
+    public void addWrongIcon(JPanel panel) {
+        panel.remove(pictureLabel);
+        img = new ImageIcon(WRONG_IMAGE);
+        pictureLabel.setIcon(img);
+        panel.add(pictureLabel);
+    }
+
+    //MODIFIES: panel
+    //EFFECTS: add right icon to the given panel
+    public void addRightIcon(JPanel panel) {
+        panel.remove(pictureLabel);
+        Icon icon = new ImageIcon(RIGHT_IMAGE);
+        pictureLabel.setIcon(icon);
+        panel.add(pictureLabel);
+    }
+
+
 
     // MODIFIES: this
     // EFFECTS: create a new Task with given name and info
     public void createTask(String name, String info) {
         task = new Tasks(name, info);
         toDoList.addTask(task);
-        System.out.println("A new task has been created and been added to the EZ list");
     }
 
     // EFFECTS: show all the tasks on the list to user
     public void showAllTasks(JPanel panel) {
-        System.out.println("All task(s) on the list:");
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             JTextArea taskText = createJTextArea(5, 30);
             taskText.setText(item.toString());
             panel.add(taskText);
-            System.out.println(item);
         }
     }
 
     // EFFECTS: show completed tasks on the list to user
     public void showCompletedTasks(JPanel panel) {
-        System.out.println("The completed task(s):");
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getStatus()) {
                 label = new JLabel(item.toString());
                 panel.add(label);
-                System.out.println(item);
             }
         }
     }
@@ -454,8 +536,6 @@ public class ToDoApp extends JFrame {
             Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
                 item.setStatus(true);
-                System.out.println("The task " + item.getName() + " has been marked as completed");
-                System.out.println("Edit operation end");
                 return;
             }
         }
@@ -523,7 +603,6 @@ public class ToDoApp extends JFrame {
     // EFFECTS: loads to-do list from file
     private void loadToDoList() throws IOException {
         toDoList = jsonReader.read();
-        System.out.println("Loaded " + toDoList.getListName() + " from " + JSON_STORE);
     }
 }
 
