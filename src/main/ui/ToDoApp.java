@@ -4,158 +4,452 @@ package ui;
 Represents a to-do list application ui
  */
 //model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+
 import exception.ListSizeZeroException;
+import exception.NotInTheListException;
 import exception.OutOfRangeException;
 import model.Tasks;
 import model.ToDoList;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class ToDoApp {
+public class ToDoApp extends JFrame {
 
     private static final String JSON_STORE = "./data/myFile.txt";
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 600;
     private boolean flag;
     private Scanner input;
     private ToDoList toDoList;
     private Tasks task;
-    private String command = null;
-    private String command2 = null;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+    private JFrame mainFrame;
+    private JLabel label;
+    private JButton button;
+
 
     // model code base on JsonSerializationDemo-WorkRoomApp
     // EFFECTS: run the To-Do application
     public ToDoApp() throws FileNotFoundException {
+        mainFrame = new JFrame("EZ List");
+        mainFrame.setSize(WIDTH, HEIGHT);
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         input = new Scanner(System.in);
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         toDoList = new ToDoList("EZ List");
-        start();
+        mainFrame.setLocationRelativeTo(null);
+        initialUI();
+        mainFrame.setVisible(true);
     }
 
-
-    // model code base on JsonSerializationDemo-WorkRoomApp
     // MODIFIES: this
-    // EFFECTS: process the user input
-    public void start() {
-        flag = true;
-        System.out.println("Welcome to the EZ to-do list Application!");
-        while (flag) {
-            display();
-            command = input.nextLine().toUpperCase();
-            processCommand(command);
-        }
+    // EFFECTS: initial the User interface
+    public void initialUI() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+        label = new JLabel(" ");
+        button = initialCreate();
+        panel.add(button);
+        button = initialShowAllTasks();
+        panel.add(button);
+        button = initialShowCompletedTasks();
+        panel.add(button);
+        button = initialEdit();
+        panel.add(button);
+        button = initialSave();
+        panel.add(button);
+        button = initialLoad();
+        panel.add(button);
+        mainFrame.add(panel);
     }
 
-
-    // model code base on JsonSerializationDemo-WorkRoomApp
     // MODIFIES: this
-    // EFFECTS: processes user command
-    private void processCommand(String command) {
-        if (command.equals("T")) {
-            createTask();
-            toDoList.addTask(task);
-        } else if (command.equals("E")) {
-            edit();
-        } else if (command.equals("S")) {
-            showAllTasks();
-        } else if (command.equals("C")) {
-            showCompletedTasks();
-        } else if (command.equals("B")) {
-            saveToDoList();
-        } else if (command.equals("L")) {
-            loadToDoList();
-        } else if (command.equals("Q")) {
-            System.out.println("Thanks for using EZ to-do list, goodbye!");
-            flag = false;
-        } else {
-            System.out.println("Invalid Input");
-        }
+    // EFFECTS: create the "Create" button and set the window for create
+    public JButton initialCreate() {
+        button = new JButton("Create a new Task");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.dispose();
+                JPanel createPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
+                JFrame createFrame = createFrame("Create", createPanel);
+                JLabel nameText = new JLabel("Task name");
+                createPanel.add(nameText);
+                JTextArea name = createJTextArea(1, 30);
+                createPanel.add(name);
+                JLabel infoText = new JLabel("Task info");
+                createPanel.add(infoText);
+                JTextArea info = createJTextArea(5, 30);
+                createPanel.add(info);
+                JButton finishButton = finishButton(createPanel, name, info);
+                createPanel.add(finishButton);
+                JButton backButton = backButton(createFrame, mainFrame);
+                createPanel.add(backButton);
+                createPanel.add(label);
+
+            }
+        });
+        return button;
     }
-
-
-    // EFFECTS: show the application interface to user
-    public void display() {
-        System.out.println("===========================================================");
-        System.out.println("Please enter the following commands for further operation:");
-        System.out.println("Enter T to create a new task");
-        System.out.println("Enter S to show all tasks");
-        System.out.println("Enter C to show all completed tasks");
-        System.out.println("Enter E to edit the tasks on the list");
-        System.out.println("Enter B to save the to-do list to the file");
-        System.out.println("Enter L to load the to-do list from the file");
-        System.out.println("Enter Q to quit the application");
-        System.out.println("===========================================================");
-    }
-
 
 
     // MODIFIES: this
-    // EFFECTS: receive the task name, task info and task deadline from user to create a task and return the task
-    public void createTask() {
-        System.out.println("Please enter the task name");
-        String name = input.nextLine();
-        System.out.println("Please enter the task information");
-        String info = input.nextLine();
+    // EFFECTS: create the "Show All Tasks" button and set the window for Show All Tasks
+    public JButton initialShowAllTasks() {
+        button = new JButton("Show All Tasks");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.dispose();
+                JPanel showAllPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 30, 30));
+                JFrame showAllFrame = createFrame("Show All Tasks", showAllPanel);
+                JButton backButton = backButton(showAllFrame, mainFrame);
+                showAllTasks(showAllPanel);
+                showAllPanel.add(backButton);
+            }
+        });
+        return button;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: create the "Show Completed Tasks" button and set the window for Show Completed Tasks
+    public JButton initialShowCompletedTasks() {
+        button = new JButton("Show Completed Tasks");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.dispose();
+                JPanel showCompletedPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
+                JFrame showCompletedFrame = createFrame("Show Completed Tasks", showCompletedPanel);
+                JButton backButton = backButton(showCompletedFrame, mainFrame);
+                showCompletedTasks(showCompletedPanel);
+                showCompletedPanel.add(backButton);
+            }
+        });
+        return button;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: create the "Edit" button and set the window for Edit
+    public JButton initialEdit() {
+        JButton editButton = new JButton("Edit");
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.dispose();
+                JPanel editPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+                JFrame editFrame = createFrame("Edit", editPanel);
+                JButton completeButton = completeButton(editFrame);
+                JButton setPriorityButton = setPriorityButton(editFrame);
+                JButton deleteButton = deleteButton(editFrame);
+                JButton backButton = backButton(editFrame, mainFrame);
+                editPanel.add(completeButton);
+                editPanel.add(setPriorityButton);
+                editPanel.add(deleteButton);
+                editPanel.add(backButton);
+            }
+        });
+        return editButton;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create the "Save" button and set the window for Save
+    public JButton initialSave() {
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            JLabel msg = new JLabel();
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    mainFrame.dispose();
+                    JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+                    JFrame saveFrame = createFrame("Save", savePanel);
+
+                    JButton backButton = backButton(saveFrame, mainFrame);
+                    savePanel.add(msg);
+                    savePanel.add(backButton);
+                    saveToDoList();
+                    msg.setText("Saved " + toDoList.getListName() + " to " + JSON_STORE);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    msg.setText("Unable to save " + toDoList.getListName() + " to " + JSON_STORE);
+                }
+
+            }
+        });
+        return saveButton;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create the "Load" button and set the window for Save
+    public JButton initialLoad() {
+        JButton loadButton = new JButton("Load");
+        loadButton.addActionListener(new ActionListener() {
+            JLabel msg = new JLabel();
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    mainFrame.dispose();
+                    JPanel loadPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+                    JFrame loadFrame = createFrame("Load", loadPanel);
+                    JButton backButton = backButton(loadFrame, mainFrame);
+                    loadPanel.add(msg);
+                    loadPanel.add(backButton);
+                    loadToDoList();
+                    msg.setText("Load " + toDoList.getListName() + " from " + JSON_STORE);
+                } catch (IOException ioException) {
+                    msg.setText("Unable to load " + toDoList.getListName() + " from " + JSON_STORE);
+                }
+
+            }
+        });
+        return loadButton;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create the "Mark as completed" button and set the window for Mark as completed
+    public JButton completeButton(JFrame frame) {
+        JButton completeButton = new JButton("Mark the task as Completed");
+        completeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                JPanel completePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
+                JFrame completeFrame = createFrame("Mark As Completed", completePanel);
+                JLabel nameText = new JLabel("Please enter the task name");
+                completePanel.add(nameText);
+                JTextArea name = new JTextArea(1, 30);
+                completePanel.add(name);
+                JButton markButton = markButton(name);
+                completePanel.add(markButton);
+                JButton backButton = backButton(completeFrame, frame);
+                completePanel.add(backButton);
+                completePanel.add(label);
+            }
+        });
+        return completeButton;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create a "Mark this task as completed" button and set the status of the task as completed
+    public JButton markButton(JTextArea name) {
+        JButton btn = new JButton("Mark this task as completed");
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String nameText = name.getText().trim();
+                    System.out.println(nameText);
+                    setCompleted(nameText);
+                    label.setText(nameText + " has been marked as completed");
+                } catch (NotInTheListException notInTheListException) {
+                    label.setText("The task name you enter is not on the list!");
+                }
+            }
+        });
+        return btn;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create the "Set Task priority" button and set the window for Mark as completed
+    public JButton setPriorityButton(JFrame frame) {
+        JButton setPriorityButton = new JButton("Set Task Priority");
+        setPriorityButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                JPanel priorityPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 140, 30));
+                JFrame priorityFrame = createFrame("Set Priority", priorityPanel);
+                JLabel nameText = new JLabel("Please enter the task name");
+                priorityPanel.add(nameText);
+                JTextArea name = new JTextArea(1, 30);
+                priorityPanel.add(name);
+                JLabel priorityText = new JLabel("Please enter the priority between 0-5");
+                priorityPanel.add(priorityText);
+                JTextArea priority = new JTextArea(1, 30);
+                priorityPanel.add(priority);
+                JButton finishButton = finishButton(name, priority);
+                priorityPanel.add(finishButton);
+                JButton backButton = backButton(priorityFrame, frame);
+                priorityPanel.add(backButton);
+                priorityPanel.add(label);
+            }
+        });
+        return setPriorityButton;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create the "Delete Task" button and set the window for Delete Task
+    public JButton deleteButton(JFrame frame) {
+        JButton deleteButton = new JButton("Delete Task");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                JPanel deletePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 100, 30));
+                JFrame deleteFrame = createFrame("Delete Task", deletePanel);
+                JLabel nameText = new JLabel("Please enter the task name");
+                deletePanel.add(nameText);
+                JTextArea name = new JTextArea(1, 30);
+                deletePanel.add(name);
+                JButton finishButton = finishButton(name);
+                deletePanel.add(finishButton);
+                JButton backButton = backButton(deleteFrame, frame);
+                deletePanel.add(backButton);
+                deletePanel.add(label);
+            }
+        });
+        return deleteButton;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create a "Finish" button for "Delete Task" window
+    public JButton finishButton(JTextArea name) {
+        JButton btn = new JButton("Finish");
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String nameText = name.getText().trim();
+                    System.out.println(nameText);
+                    deleteTask(nameText);
+                    label.setText(nameText + " has been deleted from the list");
+                } catch (ListSizeZeroException listSizeZeroException) {
+                    label.setText("The list is empty!");
+                } catch (NotInTheListException notInTheListException) {
+                    label.setText("The task name you enter is not on the list!");
+                }
+
+            }
+        });
+        return btn;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create a "Finish" button for "Set Task priority" window
+    public JButton finishButton(JTextArea name, JTextArea priority) {
+        JButton btn = new JButton("Finish");
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String nameText = name.getText().trim();
+                    int priorityNum = Integer.parseInt(priority.getText().trim());
+                    System.out.println(nameText);
+                    setTaskPriority(nameText, priorityNum);
+                    label.setText("Set the task " + nameText + "'s priority as " + priority.getText().trim());
+                } catch (NotInTheListException notInTheListException) {
+                    label.setText("The task name you enter is not on the list!");
+                } catch (OutOfRangeException outOfRangeException) {
+                    label.setText("The task priority you enter is our of range!");
+                }
+
+            }
+        });
+        return btn;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create a "Add this task to list" button and add the task to the to-do list
+    public JButton finishButton(JPanel panel, JTextArea name, JTextArea info) {
+        JButton btn = new JButton("Add this task to list");
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nameText = name.getText().trim();
+                System.out.println(nameText);
+                String infoText = info.getText().trim();
+                System.out.println(infoText);
+                createTask(nameText, infoText);
+                label.setText("A new task has been created and been added to the EZ list");
+            }
+        });
+        return btn;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create a new Frame with given name and initial the frame also add a panel component to the frame
+    public JFrame createFrame(String name, JPanel panel) {
+        JFrame newFrame = new JFrame(name);
+        newFrame.setSize(WIDTH, HEIGHT);
+        newFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        newFrame.setLocationRelativeTo(null);
+        newFrame.add(panel);
+        newFrame.setVisible(true);
+        label = new JLabel(" ");
+        return newFrame;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: create a new JTextArea Object and set line wrap as true
+    public JTextArea createJTextArea(int rows, int columns) {
+        JTextArea temp = new JTextArea(rows, columns);
+        temp.setLineWrap(true);
+        return temp;
+    }
+
+
+    //MODIFIES: this
+    //EFFECTS: create a "back" button
+    public JButton backButton(JFrame frame, JFrame backFrame) {
+        JButton btn = new JButton("Back");
+
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                backFrame.setVisible(true);
+            }
+        });
+        return btn;
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: create a new Task with given name and info
+    public void createTask(String name, String info) {
         task = new Tasks(name, info);
+        toDoList.addTask(task);
         System.out.println("A new task has been created and been added to the EZ list");
     }
 
     // EFFECTS: show all the tasks on the list to user
-    public void showAllTasks() {
+    public void showAllTasks(JPanel panel) {
         System.out.println("All task(s) on the list:");
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
+            JTextArea taskText = createJTextArea(5, 30);
+            taskText.setText(item.toString());
+            panel.add(taskText);
             System.out.println(item);
         }
     }
 
     // EFFECTS: show completed tasks on the list to user
-    public void showCompletedTasks() {
+    public void showCompletedTasks(JPanel panel) {
         System.out.println("The completed task(s):");
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getStatus()) {
+                label = new JLabel(item.toString());
+                panel.add(label);
                 System.out.println(item);
             }
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: process the command from the user and edit the task on the to do list
-    public void edit() {
-        System.out.println("Enter M to mark the task as completed");
-        System.out.println("Enter P to set the priorities of the task");
-        System.out.println("Enter D to delete the task from the list");
-        command2 = input.nextLine().toUpperCase();
-        if (command2.equals("M")) {
-            System.out.println("Please enter the task name that you completed");
-            String name = input.nextLine();
-            setCompleted(name);
-        } else if (command2.equals("P")) {
-            System.out.println("Please enter the task name that you want set priority");
-            String name = input.nextLine();
-            System.out.println("Please enter the priority level you want set (from 0-5)");
-            int num = Integer.parseInt(input.nextLine());
-            setTaskPriority(name, num);
-        } else if (command2.equals("D")) {
-            System.out.println("Please enter the task name that you want delete");
-            String name = input.nextLine();
-            deleteTask(name);
-        } else {
-            System.out.println("Invalid Input");
-            System.out.println("Edit operation end");
-        }
-
-    }
-
-    // MODIFIES: this
     // EFFECTS: mark the task as completed
-    public void setCompleted(String name) {
+    public void setCompleted(String name) throws NotInTheListException {
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
@@ -165,47 +459,35 @@ public class ToDoApp {
                 return;
             }
         }
-        System.out.println("The task name you enter is not on the list");
+        throw new NotInTheListException();
     }
 
     // MODIFIES: this
     // EFFECTS: delete the task from the to-do list
-    public void deleteTask(String name) {
+    public void deleteTask(String name) throws NotInTheListException, ListSizeZeroException {
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
-                try {
-                    toDoList.deleteTask(item);
-                    System.out.println("The task " + item.getName() + " has been deleted");
-                    System.out.println("Edit operation end");
-                    return;
-                } catch (ListSizeZeroException e) {
-                    e.printStackTrace();
-                }
+
+                toDoList.deleteTask(item);
+                return;
             }
         }
-        System.out.println("The task name you enter is not on the list");
+        throw new NotInTheListException();
     }
 
     // MODIFIES: this
     // EFFECTS: set priority of the task on the list, high priority task will appear on the top of the list
-    public void setTaskPriority(String name, int num) {
+    public void setTaskPriority(String name, int num) throws NotInTheListException, OutOfRangeException {
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getName().equals(name)) {
-                try {
-                    item.setPriority(num);
-                    sortList();
-                    System.out.println("The task " + name + " has been set priority as " + num);
-                    System.out.println("Edit operation end");
-
-                } catch (OutOfRangeException e) {
-                    e.printStackTrace();
-                }
+                item.setPriority(num);
+                sortList();
                 return;
             }
         }
-        System.out.println("The task name you enter is not on the list");
+        throw new NotInTheListException();
     }
 
     // MODIFIES: this
@@ -230,27 +512,18 @@ public class ToDoApp {
 
     // model code base on JsonSerializationDemo-WorkRoomApp
     // EFFECTS: saves the to-do list to file
-    private void saveToDoList() {
-        try {
-            jsonWriter.open();
-            jsonWriter.write(toDoList);
-            jsonWriter.close();
-            System.out.println("Saved " + toDoList.getListName() + " to " + JSON_STORE);
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
-        }
+    private void saveToDoList() throws FileNotFoundException {
+        jsonWriter.open();
+        jsonWriter.write(toDoList);
+        jsonWriter.close();
     }
 
     // model code base on JsonSerializationDemo-WorkRoomApp
     // MODIFIES: this
     // EFFECTS: loads to-do list from file
-    private void loadToDoList() {
-        try {
-            toDoList = jsonReader.read();
-            System.out.println("Loaded " + toDoList.getListName() + " from " + JSON_STORE);
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
-        }
+    private void loadToDoList() throws IOException {
+        toDoList = jsonReader.read();
+        System.out.println("Loaded " + toDoList.getListName() + " from " + JSON_STORE);
     }
 }
 

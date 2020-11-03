@@ -2,15 +2,21 @@
     "name": "EZ List",
     "tasks": [
         {
-            "name": "task1",
+            "name": "aa",
             "priority": 0,
-            "info": "study",
-            "status": true
+            "info": "aa",
+            "status": false
         },
         {
-            "name": "task2",
+            "name": "bb",
             "priority": 0,
-            "info": "shop",
+            "info": "bb",
+            "status": false
+        },
+        {
+            "name": "cc",
+            "priority": 0,
+            "info": "cc",
             "status": false
         }
     ]
