@@ -529,7 +529,6 @@ public class ToDoApp extends JFrame {
     //MODIFIES: panel
     //EFFECTS: add wrong icon to the given panel
     public void addWrongIcon(JPanel panel) {
-        panel.remove(pictureLabel);
         img = new ImageIcon(WRONG_IMAGE);
         pictureLabel.setIcon(img);
         panel.add(pictureLabel);
@@ -538,7 +537,6 @@ public class ToDoApp extends JFrame {
     //MODIFIES: panel
     //EFFECTS: add right icon to the given panel
     public void addRightIcon(JPanel panel) {
-        panel.remove(pictureLabel);
         Icon icon = new ImageIcon(RIGHT_IMAGE);
         pictureLabel.setIcon(icon);
         panel.add(pictureLabel);

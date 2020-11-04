@@ -1,4 +1,17 @@
 {
     "name": "EZ List",
-    "tasks": []
+    "tasks": [
+        {
+            "name": "aa",
+            "priority": 0,
+            "info": "aa",
+            "status": true
+        },
+        {
+            "name": "bb",
+            "priority": 0,
+            "info": "aab",
+            "status": false
+        }
+    ]
 }
