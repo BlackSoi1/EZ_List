@@ -22,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class ToDoApp extends JFrame {
 
@@ -32,8 +31,9 @@ public class ToDoApp extends JFrame {
     private static final String CLICK_SOUND = "./resources/Click.wav";
     private static final String WRONG_IMAGE = "./resources/wrong.png";
     private static final String RIGHT_IMAGE = "./resources/right.jpg";
+    private static final String BACKGROUND_IMAGE = "./resources/background.jpg";
     private static final int WIDTH = 500;
-    private static final int HEIGHT = 600;
+    private static final int HEIGHT = 700;
     private ToDoList toDoList;
     private Tasks task;
     private JsonWriter jsonWriter;
@@ -43,6 +43,7 @@ public class ToDoApp extends JFrame {
     private JButton button;
     private JLabel pictureLabel;
     private ImageIcon img;
+    private JLabel msg;
 
     // model code base on JsonSerializationDemo-WorkRoomApp
     // EFFECTS: run the To-Do application
@@ -55,6 +56,7 @@ public class ToDoApp extends JFrame {
         toDoList = new ToDoList("EZ List");
         pictureLabel = new JLabel();
         mainFrame.setLocationRelativeTo(null);
+        msg = new JLabel();
         initialUI();
         mainFrame.setVisible(true);
     }
@@ -62,19 +64,26 @@ public class ToDoApp extends JFrame {
     // MODIFIES: this
     // EFFECTS: initial the User interface
     public void initialUI() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 190, 60));
+        panel.setBackground(new Color(255, 218, 185));
         label = new JLabel(" ");
         button = initialCreate();
+        setButton(button);
         panel.add(button);
         button = initialShowAllTasks();
+        setButton(button);
         panel.add(button);
         button = initialShowCompletedTasks();
+        setButton(button);
         panel.add(button);
         button = initialEdit();
+        setButton(button);
         panel.add(button);
         button = initialSave();
+        setButton(button);
         panel.add(button);
         button = initialLoad();
+        setButton(button);
         panel.add(button);
         mainFrame.add(panel);
     }
@@ -83,12 +92,13 @@ public class ToDoApp extends JFrame {
     // EFFECTS: create the "Create" button and set the window for create
     public JButton initialCreate() {
         button = new JButton("Create a new Task");
+        setButton(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.dispose();
                 playClick();
-                JPanel createPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
+                JPanel createPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 75, 30));
                 JFrame createFrame = createFrame("Create", createPanel);
                 addComponent(createPanel);
                 JButton backButton = backButton(createFrame, mainFrame);
@@ -102,11 +112,13 @@ public class ToDoApp extends JFrame {
     // MODIFIES: panel
     // EFFECTS: helper method for initialCreate() to let the panel ad the name,info JTextArea
     public void addComponent(JPanel panel) {
-        JLabel nameText = new JLabel("Task name");
+        JLabel nameText = new JLabel("Task name:");
+        setLabel(nameText);
         panel.add(nameText);
         JTextArea name = createJTextArea(1, 30);
         panel.add(name);
-        JLabel infoText = new JLabel("Task info");
+        JLabel infoText = new JLabel("Task info:");
+        setLabel(infoText);
         panel.add(infoText);
         JTextArea info = createJTextArea(5, 30);
         panel.add(info);
@@ -118,6 +130,7 @@ public class ToDoApp extends JFrame {
     // EFFECTS: create the "Show All Tasks" button and set the window for Show All Tasks
     public JButton initialShowAllTasks() {
         button = new JButton("Show All Tasks");
+        setButton(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,6 +150,7 @@ public class ToDoApp extends JFrame {
     // EFFECTS: create the "Show Completed Tasks" button and set the window for Show Completed Tasks
     public JButton initialShowCompletedTasks() {
         button = new JButton("Show Completed Tasks");
+        setButton(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,12 +170,13 @@ public class ToDoApp extends JFrame {
     // EFFECTS: create the "Edit" button and set the window for Edit
     public JButton initialEdit() {
         JButton editButton = new JButton("Edit");
+        setButton(editButton);
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 playClick();
                 mainFrame.dispose();
-                JPanel editPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+                JPanel editPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 170, 30));
                 JFrame editFrame = createFrame("Edit", editPanel);
                 JButton completeButton = completeButton(editFrame);
                 JButton setPriorityButton = setPriorityButton(editFrame);
@@ -180,14 +195,15 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create the "Save" button and set the window for Save
     public JButton initialSave() {
         JButton saveButton = new JButton("Save");
+        setButton(saveButton);
+        setLabel(msg);
         saveButton.addActionListener(new ActionListener() {
-            JLabel msg = new JLabel();
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     mainFrame.dispose();
-                    JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+                    JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 150, 30));
                     JFrame saveFrame = createFrame("Save", savePanel);
                     JButton backButton = backButton(saveFrame, mainFrame);
                     savePanel.add(msg);
@@ -210,14 +226,14 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create the "Load" button and set the window for Save
     public JButton initialLoad() {
         JButton loadButton = new JButton("Load");
+        setButton(loadButton);
+        setLabel(msg);
         loadButton.addActionListener(new ActionListener() {
-            JLabel msg = new JLabel();
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     mainFrame.dispose();
-                    JPanel loadPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 200, 30));
+                    JPanel loadPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 150, 30));
                     JFrame loadFrame = createFrame("Load", loadPanel);
                     JButton backButton = backButton(loadFrame, mainFrame);
                     loadPanel.add(msg);
@@ -239,6 +255,7 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create the "Mark as completed" button and set the window for Mark as completed
     public JButton completeButton(JFrame frame) {
         JButton completeButton = new JButton("Mark the task as Completed");
+        setButton(completeButton);
         completeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -246,8 +263,10 @@ public class ToDoApp extends JFrame {
                 JPanel completePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 30));
                 JFrame completeFrame = createFrame("Mark As Completed", completePanel);
                 JLabel nameText = new JLabel("Please enter the task name");
+                setLabel(nameText);
                 completePanel.add(nameText);
                 JTextArea name = new JTextArea(1, 30);
+                setTextArea(name);
                 completePanel.add(name);
                 JButton markButton = markButton(name, completePanel);
                 completePanel.add(markButton);
@@ -263,6 +282,7 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create a "Mark this task as completed" button and set the status of the task as completed
     public JButton markButton(JTextArea name, JPanel panel) {
         JButton btn = new JButton("Mark this task as completed");
+        setButton(btn);
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -286,22 +306,14 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create the "Set Task priority" button and set the window for Mark as completed
     public JButton setPriorityButton(JFrame frame) {
         JButton setPriorityButton = new JButton("Set Task Priority");
+        setButton(setPriorityButton);
         setPriorityButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                JPanel priorityPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 140, 30));
+                JPanel priorityPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 100, 30));
                 JFrame priorityFrame = createFrame("Set Priority", priorityPanel);
-                JLabel nameText = new JLabel("Please enter the task name");
-                priorityPanel.add(nameText);
-                JTextArea name = new JTextArea(1, 30);
-                priorityPanel.add(name);
-                JLabel priorityText = new JLabel("Please enter the priority between 0-5");
-                priorityPanel.add(priorityText);
-                JTextArea priority = new JTextArea(1, 30);
-                priorityPanel.add(priority);
-                JButton finishButton = finishButton(name, priority, priorityPanel);
-                priorityPanel.add(finishButton);
+                createJTextAndJLabel(priorityPanel);
                 JButton backButton = backButton(priorityFrame, frame);
                 priorityPanel.add(backButton);
                 priorityPanel.add(label);
@@ -310,10 +322,30 @@ public class ToDoApp extends JFrame {
         return setPriorityButton;
     }
 
+    //MODIFIES: panel
+    //EFFECTS: helper method for setPriority()
+    public void createJTextAndJLabel(JPanel panel) {
+        JLabel nameText = new JLabel("Please enter the task name");
+        setLabel(nameText);
+        panel.add(nameText);
+        JTextArea name = new JTextArea(1, 30);
+        setTextArea(name);
+        panel.add(name);
+        JLabel priorityText = new JLabel("Please enter the priority between 0-5");
+        setLabel(priorityText);
+        panel.add(priorityText);
+        JTextArea priority = new JTextArea(1, 30);
+        setTextArea(priority);
+        panel.add(priority);
+        JButton finishButton = finishButton(name, priority, panel);
+        panel.add(finishButton);
+    }
+
     //MODIFIES: this
     //EFFECTS: create the "Delete Task" button and set the window for Delete Task
     public JButton deleteButton(JFrame frame) {
         JButton deleteButton = new JButton("Delete Task");
+        setButton(deleteButton);
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -322,8 +354,10 @@ public class ToDoApp extends JFrame {
                 JPanel deletePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 100, 30));
                 JFrame deleteFrame = createFrame("Delete Task", deletePanel);
                 JLabel nameText = new JLabel("Please enter the task name");
+                setLabel(nameText);
                 deletePanel.add(nameText);
                 JTextArea name = new JTextArea(1, 30);
+                setTextArea(name);
                 deletePanel.add(name);
                 JButton finishButton = finishButton(name, deletePanel);
                 deletePanel.add(finishButton);
@@ -339,6 +373,7 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create a "Finish" button for "Delete Task" window
     public JButton finishButton(JTextArea name, JPanel panel) {
         JButton btn = new JButton("Finish");
+        setButton(btn);
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -367,13 +402,13 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create a "Finish" button for "Set Task priority" window
     public JButton finishButton(JTextArea name, JTextArea priority, JPanel panel) {
         JButton btn = new JButton("Finish");
+        setButton(btn);
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     String nameText = name.getText().trim();
-                    int priorityNum = Integer.parseInt(priority.getText().trim());
-                    setTaskPriority(nameText, priorityNum);
+                    setTaskPriority(nameText, Integer.parseInt(priority.getText().trim()));
                     playSuccess();
                     addRightIcon(panel);
                     label.setText("Set the task " + nameText + "'s priority as " + priority.getText().trim());
@@ -396,6 +431,7 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create a "Add this task to list" button and add the task to the to-do list
     public JButton finishButton(JPanel panel, JTextArea name, JTextArea info) {
         JButton btn = new JButton("Add this task to list");
+        setButton(btn);
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -415,9 +451,10 @@ public class ToDoApp extends JFrame {
     public JFrame createFrame(String name, JPanel panel) {
         JFrame newFrame = new JFrame(name);
         newFrame.setSize(WIDTH, HEIGHT);
+        panel.setBackground(new Color(255, 218, 185));
+        newFrame.add(panel);
         newFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         newFrame.setLocationRelativeTo(null);
-        newFrame.add(panel);
         newFrame.setVisible(true);
         label = new JLabel(" ");
         return newFrame;
@@ -428,6 +465,7 @@ public class ToDoApp extends JFrame {
     public JTextArea createJTextArea(int rows, int columns) {
         JTextArea temp = new JTextArea(rows, columns);
         temp.setLineWrap(true);
+        setTextArea(temp);
         return temp;
     }
 
@@ -436,7 +474,7 @@ public class ToDoApp extends JFrame {
     //EFFECTS: create a "back" button
     public JButton backButton(JFrame frame, JFrame backFrame) {
         JButton btn = new JButton("Back");
-
+        setBackButton(btn);
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -499,7 +537,39 @@ public class ToDoApp extends JFrame {
         panel.add(pictureLabel);
     }
 
+    //MODIFIES: button
+    //EFFECTS: set the back button font, border, color and bounds
+    public void setBackButton(JButton button) {
+        button.setForeground(Color.white);
+        button.setBackground(new Color(160, 82, 45));
+        button.setFont(new Font("Arial", Font.BOLD, 25));
+        button.setBorderPainted(false);
+        button.setBorder(BorderFactory.createRaisedBevelBorder());
+    }
 
+    //MODIFIES: button
+    //EFFECTS: set the button font, border, color and bounds
+    public void setButton(JButton button) {
+        button.setForeground(Color.white);
+        button.setBackground(new Color(68, 114, 80));
+        button.setFont(new Font("Arial", Font.BOLD, 23));
+        button.setBorderPainted(false);
+        button.setBorder(BorderFactory.createRaisedBevelBorder());
+    }
+
+    //MODIFIES: label
+    //EFFECTS: set the label font, border, color and bounds
+    public void setLabel(JLabel label) {
+        label.setForeground(new Color(122, 86, 85));
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+    }
+
+    //MODIFIES: JTextArea
+    //EFFECTS: set the label font, border, color and bounds
+    public void setTextArea(JTextArea area) {
+        area.setFont(new Font("Times New Roman", Font.BOLD, 16));
+        area.setBackground(new Color(222, 184, 135));
+    }
 
     // MODIFIES: this
     // EFFECTS: create a new Task with given name and info
@@ -523,8 +593,9 @@ public class ToDoApp extends JFrame {
         for (int i = 0; i < toDoList.size(); i++) {
             Tasks item = toDoList.getTask(i);
             if (item.getStatus()) {
-                label = new JLabel(item.toString());
-                panel.add(label);
+                JTextArea taskText = createJTextArea(5, 30);
+                taskText.setText(item.toString());
+                panel.add(taskText);
             }
         }
     }
