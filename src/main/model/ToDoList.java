@@ -6,6 +6,8 @@ Represent a to-do list
 
 //model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 
+import exception.DuplicateException;
+import exception.InvalidInputException;
 import exception.ListSizeZeroException;
 import exception.NotInTheListException;
 import org.json.JSONArray;
@@ -27,16 +29,18 @@ public class ToDoList implements Writable {
     }
 
     //MODIFIES: this,task
-    //EFFECTS: if the task is not on the to-do list add task to the to-do list
-    //and return true else return false
-    public boolean addTask(Tasks task) {
+    //EFFECTS: if the task is not on the to-do list and input is not empty add task to the to-do list
+    //else throw InvalidInputException
+    public void addTask(Tasks task) throws InvalidInputException, DuplicateException {
         if (!toDoList.contains(task)) {
-            toDoList.add(task);
-            return true;
+            if (task.getName().length() != 0 && task.getInfo().length() != 0) {
+                toDoList.add(task);
+            } else {
+                throw new InvalidInputException();
+            }
         } else {
-            return false;
+            throw new DuplicateException();
         }
-
     }
 
     // model code base on JsonSerializationDemo-WorkRoom
@@ -49,7 +53,7 @@ public class ToDoList implements Writable {
     //MODIFIES: this
     //EFFECTS: delete the task from the to-do list if this to-do list is not empty. throw ListSizeZeroException if
     //this list is empty
-    public void deleteTask(Tasks task) throws ListSizeZeroException,NotInTheListException {
+    public void deleteTask(Tasks task) throws ListSizeZeroException, NotInTheListException {
         if (toDoList.size() == 0) {
             throw new ListSizeZeroException("Cannot delete task from empty to-do list");
         }

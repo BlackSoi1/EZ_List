@@ -3,6 +3,8 @@ package persistence;
 Represents a JsonReader
  */
 
+import exception.DuplicateException;
+import exception.InvalidInputException;
 import model.Tasks;
 import model.ToDoList;
 import org.json.JSONArray;
@@ -28,7 +30,7 @@ public class JsonReader {
     // model code base on JsonSerializationDemo-JsonReader
     // EFFECTS: reads workroom from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public ToDoList read() throws IOException {
+    public ToDoList read() throws IOException, InvalidInputException, DuplicateException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseToDoList(jsonObject);
@@ -48,7 +50,7 @@ public class JsonReader {
 
     // model code base on JsonSerializationDemo-JsonReader
     // EFFECTS: parses to-do list from JSON object and returns it
-    private ToDoList parseToDoList(JSONObject jsonObject) {
+    private ToDoList parseToDoList(JSONObject jsonObject) throws InvalidInputException, DuplicateException {
         String name = jsonObject.getString("name");
         ToDoList list = new ToDoList(name);
         addTasks(list, jsonObject);
@@ -58,7 +60,7 @@ public class JsonReader {
     // model code base on JsonSerializationDemo-JsonReader
     // MODIFIES: list
     // EFFECTS: parses tasks from JSON object and adds them to to-do list
-    private void addTasks(ToDoList list, JSONObject jsonObject) {
+    private void addTasks(ToDoList list, JSONObject jsonObject) throws InvalidInputException, DuplicateException {
         JSONArray jsonArray = jsonObject.getJSONArray("tasks");
         for (Object json : jsonArray) {
             JSONObject nextThingy = (JSONObject) json;
@@ -69,7 +71,7 @@ public class JsonReader {
     // model code base on JsonSerializationDemo-JsonReader
     // MODIFIES: list
     // EFFECTS: parses task from JSON object and adds it to to-do list
-    private void addTask(ToDoList list, JSONObject jsonObject) {
+    private void addTask(ToDoList list, JSONObject jsonObject) throws InvalidInputException, DuplicateException {
         String name = jsonObject.getString("name");
         String info = jsonObject.getString("info");
         boolean status = jsonObject.getBoolean("status");

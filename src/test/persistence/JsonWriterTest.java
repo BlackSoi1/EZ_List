@@ -1,5 +1,7 @@
 package persistence;
 
+import exception.DuplicateException;
+import exception.InvalidInputException;
 import model.Tasks;
 import model.ToDoList;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,7 @@ public class JsonWriterTest extends JsonTest {
             toDoList = reader.read();
             assertEquals("EZ List", toDoList.getListName());
             assertEquals(0, toDoList.size());
-        } catch (IOException e) {
+        } catch (IOException | InvalidInputException | DuplicateException e) {
             fail("Exception should not have been thrown");
         }
     }
@@ -64,7 +66,7 @@ public class JsonWriterTest extends JsonTest {
             checkTask("task 2","work",false,3,tasks.get(0));
             checkTask("task 1","study",true,0,tasks.get(1));
 
-        } catch (IOException e) {
+        } catch (IOException | InvalidInputException | DuplicateException e) {
             fail("Exception should not have been thrown");
         }
     }

@@ -5,9 +5,7 @@ Represents a to-do list application ui
  */
 //model code base on https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 
-import exception.ListSizeZeroException;
-import exception.NotInTheListException;
-import exception.OutOfRangeException;
+import exception.*;
 import model.Tasks;
 import model.ToDoList;
 import persistence.JsonReader;
@@ -241,7 +239,7 @@ public class ToDoApp extends JFrame {
                     loadToDoList();
                     playSuccess();
                     msg.setText("Load " + toDoList.getListName() + " from " + JSON_STORE);
-                } catch (IOException ioException) {
+                } catch (IOException | InvalidInputException | DuplicateException ioException) {
                     playError();
                     msg.setText("Unable to load " + toDoList.getListName() + " from " + JSON_STORE);
                 }
@@ -435,12 +433,21 @@ public class ToDoApp extends JFrame {
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nameText = name.getText().trim();
-                String infoText = info.getText().trim();
-                createTask(nameText, infoText);
-                playSuccess();
-                addRightIcon(panel);
-                label.setText("A new task has been created and been added to the EZ list");
+                try {
+                    createTask(name.getText().trim(), info.getText().trim());
+                    playSuccess();
+                    addRightIcon(panel);
+                    label.setText("A new task has been created and been added to the EZ list");
+                } catch (InvalidInputException invalidInputException) {
+                    playError();
+                    addWrongIcon(panel);
+                    label.setText("Task name or Task info cannot be empty!");
+                } catch (DuplicateException duplicateException) {
+                    playError();
+                    addWrongIcon(panel);
+                    label.setText("The task already in the list!");
+                }
+
             }
         });
         return btn;
@@ -573,7 +580,7 @@ public class ToDoApp extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: create a new Task with given name and info
-    public void createTask(String name, String info) {
+    public void createTask(String name, String info) throws InvalidInputException, DuplicateException {
         task = new Tasks(name, info);
         toDoList.addTask(task);
     }
@@ -672,7 +679,7 @@ public class ToDoApp extends JFrame {
     // model code base on JsonSerializationDemo-WorkRoomApp
     // MODIFIES: this
     // EFFECTS: loads to-do list from file
-    private void loadToDoList() throws IOException {
+    private void loadToDoList() throws IOException, InvalidInputException, DuplicateException {
         toDoList = jsonReader.read();
     }
 }
