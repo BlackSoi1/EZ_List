@@ -34,7 +34,7 @@ public class JsonWriter {
 
     // model code base on JsonSerializationDemo-JsonWriter
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of todoList to file
     public void write(ToDoList list) {
         JSONObject json = list.toJson();
         saveToFile(json.toString(TAB));

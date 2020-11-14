@@ -11,7 +11,7 @@ public class Main {
         try {
             ToDoApp toDoApp = new ToDoApp();
         } catch (FileNotFoundException e) {
-            System.out.println("Unable to run application: file not found");
+            System.out.println("Unable  to run application: file not found");
         }
 
     }
