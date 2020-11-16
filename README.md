@@ -33,7 +33,13 @@ The to-do list application is named **EZ**. This application has following *feat
 
 - As a user, I want to be able to be able to load my to-do list from file 
 
-"Phase 4: Task 2":     
+##"Phase 4: Task 2":     
 - Option "Test and design a class in your model package that is robust.  You must have at least one method that throws a checked exception.  You must have one test for the case where the exception is expected and another where the exception is not expected."
 - Class: ToDoList
 - Method: addTask(),  deleteTask()
+
+##"Phase 4: Task 3":    
+If I have more time, I would like to improve the cohesion and lower the coupling.
+Especially in the ui package, I will divide the JButtonComponent class into different
+class to represent the different button functionalities. Besides, I will create a class named
+JPanelComponent class to represent the different windows in the frame. 

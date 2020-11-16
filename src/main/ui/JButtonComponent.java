@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class JLabelComponent {
+public class JButtonComponent {
     private static final String JSON_STORE = "./data/myFile.txt";
     private AudiovisualComponent ac;
     private SwingComponent sc;
@@ -28,7 +28,7 @@ public class JLabelComponent {
     private TaskUI taskUI;
 
 
-    public JLabelComponent() {
+    public JButtonComponent() {
         sc = new SwingComponent();
         ac = new AudiovisualComponent();
         msg = new JLabel();

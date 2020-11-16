@@ -16,7 +16,7 @@ public class ToDoApp extends JFrame {
 
     private AudiovisualComponent ac;
     private SwingComponent sc;
-    private JLabelComponent jc;
+    private JButtonComponent jc;
     private static final int WIDTH = 550;
     private static final int HEIGHT = 700;
     private JFrame mainFrame;
@@ -29,7 +29,7 @@ public class ToDoApp extends JFrame {
     public ToDoApp() throws FileNotFoundException {
         ac = new AudiovisualComponent();
         sc = new SwingComponent();
-        jc = new JLabelComponent();
+        jc = new JButtonComponent();
         mainFrame = new JFrame("EZ List");
         mainFrame.setSize(WIDTH, HEIGHT);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
