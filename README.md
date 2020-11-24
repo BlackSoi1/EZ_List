@@ -42,4 +42,5 @@ The to-do list application is named **EZ**. This application has following *feat
 If I have more time, I would like to improve the cohesion and lower the coupling.
 Especially in the ui package, I will divide the JButtonComponent class into different
 class to represent the different button functionalities. Besides, I will create a class named
-JPanelComponent class to represent the different windows in the frame. 
+JPanelComponent class to represent the different windows in the frame. Also I will use
+Observer Design pattern to record the task into the to-do List.
